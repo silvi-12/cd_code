@@ -1,0 +1,90 @@
+# rules = ["S -> A | B C",
+#          "A -> a | b",
+#          "B -> p | ε",
+#          "C -> c"]
+
+
+
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1]
+
+    def __str__(self):
+        return str(self.items)
+
+
+
+
+def parse_string(input_string, parsing_table):
+    stack = Stack()
+    stack.push('$')  # Bottom of stack marker
+    stack.push('S')  # Starting symbol
+
+    buffer_input = input_string.split()
+    buffer_input.append('$')  # End of input marker
+
+    print("{:<20} {:<20} {:<20}".format("Buffer", "Stack", "Action"))
+    while not stack.is_empty():
+        buffer_str = ''.join(buffer_input).ljust(20)
+        stack_str = str(stack).ljust(20)
+
+        top_stack = stack.peek()
+        next_input = buffer_input[0]
+
+        if top_stack == next_input:
+            stack.pop()
+            buffer_input.pop(0)
+            print("{:<20} {:<20} {:<20}".format(buffer_str, stack_str, "Matched: {}".format(next_input)))
+        elif (top_stack, next_input) in parsing_table:
+            production = parsing_table[(top_stack, next_input)]
+            stack.pop()
+            if production != 'ε':
+                for symbol in reversed(production):
+                    stack.push(symbol)
+            print("{:<20} {:<20} {:<20}".format(buffer_str, stack_str, "Apply production: {} -> {}".format(top_stack, ' '.join(production))))
+        else:
+            print("\nError! Invalid input.")
+            return False
+
+        if stack.is_empty() and next_input != '$':
+            print("\nError! Incomplete input.")
+            return False
+
+    print("\nValid String!")
+    return True
+
+
+# LL(1) Parsing Table
+parsing_table = {
+    ('A', 'a'): ['a'],
+    ('A', 'b'): ['b'],
+    ('B', 'p'): ['p'],
+    ('B', 'c'): ['ε'],
+    ('S', 'a'): ['A'],
+    ('S', 'b'): ['A'],
+    ('S', 'c'): ['B', 'C'],
+    ('S', 'p'): ['B', 'C'],
+    ('C', 'c'): ['c']
+}
+
+# Input string to validate
+input_string = "p a"
+
+parse_string(input_string, parsing_table)
+
+
+
