@@ -1,0 +1,468 @@
+Aim (E1):
+Design a lexical analyzer to identify the tokens such as keywords, identifiers, operators,
+constants (Int, float & character), special symbols and strings for C language using LEX. Use File for the input.
+
+Program:
+
+%{
+#include<stdio.h>
+%}
+keyword include|void|main|int|float|char|double|if|else|switch|case|for|while|do
+operators ==|!=|>=|<=|[\>\<\+\-\*\/\=]
+identifiers [a-zA-Z0-9]
+%%
+\n printf("Line Break\n");
+\t printf("Tab Space\n");
+" " printf("A whitespace\n");
+{keyword} printf("%s is a keyword\n",yytext);
+[a-zA-Z]{identifiers}* printf("%s is an identifier\n",yytext);
+{operators} printf("%s is an operator\n",yytext);
+[0-9]+ printf("%s is digit(s)\n",yytext);
+
+. printf("%s is a special character\n",yytext);
+%%
+int main()
+{
+	yyin = fopen("myfirstc.txt
+","r");
+	yylex();
+}
+int yywrap()
+{
+	return (1);
+}
+
+myfirstc.txt
+
+#include<stdio.h>
+
+void main()
+{
+	int i=0;
+	float j=0;
+	for(i=0; i<=20; i++)
+	{
+		if(i==n)
+		printf("hgjfhdjghdf");
+	}
+}
+
+
+Output: 
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1>flex p1e1[1].l
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >gcc lex.yy.c
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >a.exe
+# is a special character
+include is a keyword
+< is an operator
+stdio is an identifier
+. is a special character
+h is an identifier
+> is an operator
+Line Break
+Line Break
+void is a keyword
+A whitespace
+main is a keyword
+( is a special character
+) is a special character
+Line Break
+{ is a special character
+Line Break
+Tab Space
+int is a keyword
+A whitespace
+i is an identifier
+= is an operator
+0 is digit(s)
+; is a special character
+Line Break
+Tab Space
+float is a keyword
+A whitespace
+j is an identifier
+= is an operator
+0 is digit(s)
+; is a special character
+Line Break
+Tab Space
+for is a keyword
+( is a special character
+i is an identifier
+= is an operator
+0 is digit(s)
+; is a special character
+A whitespace
+i is an identifier
+<= is an operator
+20 is digit(s)
+; is a special character
+A whitespace
+i is an identifier
++ is an operator
++ is an operator
+) is a special character
+Line Break
+Tab Space
+{ is a special character
+Line Break
+Tab Space
+Tab Space
+if is a keyword
+( is a special character
+i is an identifier
+== is an operator
+n is an identifier
+) is a special character
+Line Break
+Tab Space
+Tab Space
+printf is an identifier
+( is a special character
+" is a special character
+hgjfhdjghdf is an identifier
+" is a special character
+) is a special character
+; is a special character
+Line Break
+Tab Space
+} is a special character
+Line Break
+} is a special character
+
+
+Aim (E2):
+Write a Lex program to find the parameters given below. Consider as input a question paper of an examination and find:
+Date of examination, semester, number of questions, numbers of words, lines, small letters,
+capital letters, digits, and special characters.
+
+Program:
+
+%{
+#include<stdio.h>
+int q=0;
+int w=0;
+int l=0;
+int sl=0;
+int cl=0;
+int d=0;
+int sp=0;
+%}
+day ([1-3][0-9])|[1-9]
+month (1[0-2])|[1-9]
+year [0-9]+
+%%
+{day}\/{month}\/{year} {printf("Date of Exam: %s\n",yytext);}
+I|II|III|IV|V|VI|VII|VIII {printf("Sem: %s\n",yytext);}
+Question[1-9][0-9]* {q++;cl++;d++;}
+[a-z] {sl++;}
+[A-Z] {cl++;}
+[0-9] {d++;}
+\n {l++;w++;}
+" " {w++;}
+. {sp++;}
+%%
+void main()
+{
+	yyin = fopen("qp.txt","r");
+	yylex();
+	printf("Questions: %d\n",q);
+	printf("Word: %d\n",w);
+	printf("Lines: %d\n",l);
+	printf("Small: %d\n",sl);
+	printf("Caps: %d\n",cl);
+	printf("Digit: %d\n",d);
+	printf("Special Character: %d\n",sp);
+}
+
+int yywrap()
+{
+	return(1);
+}
+
+qp.txt
+
+ABC College
+
+1/1/2000 Sem: III
+Question1 : What are the benefits of tree plantation?
+Question2 : What is water pollution?
+Question3 : What should be done to avoid road accidents?
+Question4 : What are your view on noise pollution?
+Question5 : Why should people adopt pets?
+Question6 : What is green gym?
+Question7 : What norms must pe implemented to minimize the loss from construction to environment?
+Question8 : What is air pollution?
+
+Output: 
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >flex p1e1[1].l
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >gcc lex.yy.c
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >a.exe
+Date of Exam: 1/1/2000
+Sem: III
+Questions: 8
+Word: 74
+Lines: 11
+Small: 249
+Caps: 21
+Digit: 8
+Special Character: 17
+
+
+Aim (E3):
+Create a txt file to containing the following without heading: Name of Student, Company
+Placed in (TCS, Infosys, Wipro, Accenture, Informatica), Male/female, CGPA (floating point number), Department (CSE, IT, EC), Package (floating point number), mail id, mobile number (integer exactly 10 digits). At least 10 records must be present.
+
+Write a Lex program to find the parameters given below:
+o Identify Name of student and display it.
+o Identify CGPA and display (should be less than 10)
+o Identify Package and display it
+o Identify mail id and display
+o Identify mobile number and display
+o Find number of students placed in each of the company
+o Number of female students
+o Number of male students
+o Number of CSE, IT and EC students who are placed
+
+
+Program:
+
+%{
+#include<stdio.h>
+int tcs=0;
+int infosys=0;
+int wipro=0;
+int acc=0;
+int info=0;
+int m=0;
+int f=0;
+int cs=0;
+int it=0;
+int ec=0;
+%}
+%%
+Female {f++;}
+Male {m++;}
+TCS {tcs++;}
+Infosys {infosys++;}
+Wipro {wipro++;}
+Accenture {acc++;}
+Informatica {info++;}
+CSE {cs++;}
+IT {it++;}
+EC {ec++;}
+[A-Z][a-z]* {printf("Name: %s\n",yytext);}
+10\.0|[0-9]\.[0-9] {printf("CGPA: %s\n",yytext);}
+[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] {printf("Mobile: %s\n",yytext);}
+[0-9]+ {printf("Package: %s\n",yytext);}
+[a-z]+\@[a-z]+\.[a-z]+ {printf("Email: %s\n",yytext);}
+%%
+void main()
+{
+	yyin = fopen("compdetails.txt","r");
+	yylex();
+	printf("TCS: %d\n",tcs);
+	printf("Infosys: %d\n",infosys);
+	printf("Wipro: %d\n",wipro);
+	printf("Accenture: %d\n",acc);
+	printf("Informatica: %d\n",info);
+	printf("Male: %d\n",m);
+	printf("Female: %d\n",f);
+	printf("CSE: %d\n",cs);
+	printf("IT: %d\n",it);
+	printf("EC: %d\n",ec);
+}
+
+int yywrap()
+{
+	return(1);
+}
+
+
+compdetails.txt
+
+Abc TCS Female 9.4 CSE 600000 abc@rknec.edu 9999999999
+Xyz Infosys Male 8.9 IT 550000 xyz@example.com 8888888888
+Def Wipro Male 9.2 EC 620000 def@university.edu 7777777777
+Mno Accenture Female 8.5 CSE 580000 mno@company.com 6666666666
+Pqr Informatica Male 9.7 IT 650000 pqr@school.edu 5555555555
+Ghi TCS Female 8.1 EC 530000 ghi@college.edu 4444444444
+Jkl Infosys Male 9.0 CSE 590000 jkl@institute.com 3333333333
+Rst Wipro Female 9.3 IT 630000 rst@domain.com 2222222222
+Wxy Accenture Male 8.7 CSE 570000 wxy@school.edu 1111111111
+Nop Informatica Female 9.6 EC 640000 nop@example.com 0000000000
+
+Output: 
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >flex p1e3.l
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >gcc lex.yy.c
+
+C:\Users\silvi\Desktop\Try\College\6th_sem\CD_lab\prac1 >a.exe
+Name: Abc
+   CGPA: 9.4
+  Package: 600000
+ Email: abc@rknec.edu
+ Mobile: 9999999999
+
+Name: Xyz
+   CGPA: 8.9
+  Package: 550000
+ Email: xyz@example.com
+ Mobile: 8888888888
+
+Name: Def
+   CGPA: 9.2
+  Package: 620000
+ Email: def@university.edu
+ Mobile: 7777777777
+
+Name: Mno
+   CGPA: 8.5
+  Package: 580000
+ Email: mno@company.com
+ Mobile: 6666666666
+
+Name: Pqr
+   CGPA: 9.7
+  Package: 650000
+ Email: pqr@school.edu
+ Mobile: 5555555555
+
+Name: Ghi
+   CGPA: 8.1
+  Package: 530000
+ Email: ghi@college.edu
+ Mobile: 4444444444
+
+Name: Jkl
+   CGPA: 9.0
+  Package: 590000
+ Email: jkl@institute.com
+ Mobile: 3333333333
+
+Name: Rst
+   CGPA: 9.3
+  Package: 630000
+ Email: rst@domain.com
+ Mobile: 2222222222
+
+Name: Wxy
+   CGPA: 8.7
+  Package: 570000
+ Email: wxy@school.edu
+ Mobile: 1111111111
+
+Name: Nop
+   CGPA: 9.6
+  Package: 640000
+ Email: nop@example.com
+ Mobile: 0000000000
+TCS: 2
+Infosys: 2
+Wipro: 2
+Accenture: 2
+Informatica: 2
+Male: 5
+Female: 5
+CSE: 4
+IT: 3
+EC: 3
+
+
+Aim (E4):
+Write a Lex Program which takes C program from file & write the sane C program in
+another file after removing the comments.
+
+Program:
+
+%{
+#include<stdio.h>
+%}
+%%
+(\/\/.*\n)|\/\*.*\/\* ;
+[\n] {fprintf(yyout,"\n");}
+. {fprintf(yyout,"%s",yytext);}
+%%
+void main()
+{
+	yyin = fopen("comment.txt","r");
+	yyout = fopen("nocomment.txt","w");
+	yylex();
+}
+
+int yywrap()
+{
+	return(1);
+}
+
+comment.txt
+
+#include <stdio.h>
+
+// Function to calculate the factorial of a number recursively
+int factorial(int n) {
+    // Base case: factorial of 0 is 1
+    if (n == 0)
+        return 1;
+    // Recursive case: factorial of n is n multiplied by factorial of (n-1)
+    else
+        return n * factorial(n - 1);
+}
+
+int main() {
+    // Declare a variable to store the number
+    int num;
+    
+    // Prompt the user to enter a number
+    printf("Enter a non-negative integer: ");
+    scanf("%d", &num);
+    
+    // Check if the number is negative
+    if (num < 0) {
+        printf("Error: Factorial is not defined for negative numbers.\n");
+    } else {
+        // Calculate the factorial and display the result
+        int result = factorial(num);
+        printf("Factorial of %d is %d\n", num, result);
+    }
+    
+    // End of the program
+    return 0;
+}
+
+
+Output: 
+
+nocomment.txt
+
+#include <stdio.h>
+
+int factorial(int n) {
+        if (n == 0)
+        return 1;
+        else
+        return n * factorial(n - 1);
+}
+
+int main() {
+        int num;
+    
+        printf("Enter a non-negative integer: ");
+    scanf("%d", &num);
+    
+        if (num < 0) {
+        printf("Error: Factorial is not defined for negative numbers.\n");
+    } else {
+                int result = factorial(num);
+        printf("Factorial of %d is %d\n", num, result);
+    }
+    
+        return 0;
+}
